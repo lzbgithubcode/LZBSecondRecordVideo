@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C81199F91E8BE2E100C890AE /* LZBRecordVideoTool.m in Sources */ = {isa = PBXBuildFile; fileRef = C81199F81E8BE2E100C890AE /* LZBRecordVideoTool.m */; };
 		C838890E1E8955DA00C1AF60 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = C838890D1E8955DA00C1AF60 /* main.m */; };
 		C83889111E8955DA00C1AF60 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C83889101E8955DA00C1AF60 /* AppDelegate.m */; };
 		C83889141E8955DA00C1AF60 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C83889131E8955DA00C1AF60 /* ViewController.m */; };
@@ -35,6 +36,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		C81199F71E8BE2E100C890AE /* LZBRecordVideoTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LZBRecordVideoTool.h; sourceTree = "<group>"; };
+		C81199F81E8BE2E100C890AE /* LZBRecordVideoTool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LZBRecordVideoTool.m; sourceTree = "<group>"; };
 		C83889091E8955DA00C1AF60 /* LZBSecondRecordVideo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LZBSecondRecordVideo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C838890D1E8955DA00C1AF60 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		C838890F1E8955DA00C1AF60 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -78,6 +81,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		C81199F61E8BE25900C890AE /* LZBRecordVideoTool */ = {
+			isa = PBXGroup;
+			children = (
+				C81199F71E8BE2E100C890AE /* LZBRecordVideoTool.h */,
+				C81199F81E8BE2E100C890AE /* LZBRecordVideoTool.m */,
+			);
+			path = LZBRecordVideoTool;
+			sourceTree = "<group>";
+		};
 		C83889001E8955DA00C1AF60 = {
 			isa = PBXGroup;
 			children = (
@@ -101,6 +113,7 @@
 		C838890B1E8955DA00C1AF60 /* LZBSecondRecordVideo */ = {
 			isa = PBXGroup;
 			children = (
+				C81199F61E8BE25900C890AE /* LZBRecordVideoTool */,
 				C838890F1E8955DA00C1AF60 /* AppDelegate.h */,
 				C83889101E8955DA00C1AF60 /* AppDelegate.m */,
 				C83889121E8955DA00C1AF60 /* ViewController.h */,
@@ -276,6 +289,7 @@
 				C83889141E8955DA00C1AF60 /* ViewController.m in Sources */,
 				C83889111E8955DA00C1AF60 /* AppDelegate.m in Sources */,
 				C838890E1E8955DA00C1AF60 /* main.m in Sources */,
+				C81199F91E8BE2E100C890AE /* LZBRecordVideoTool.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -505,6 +519,7 @@
 				C83889381E8955DA00C1AF60 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		C83889391E8955DA00C1AF60 /* Build configuration list for PBXNativeTarget "LZBSecondRecordVideoTests" */ = {
 			isa = XCConfigurationList;
@@ -513,6 +528,7 @@
 				C838893B1E8955DA00C1AF60 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		C838893C1E8955DA00C1AF60 /* Build configuration list for PBXNativeTarget "LZBSecondRecordVideoUITests" */ = {
 			isa = XCConfigurationList;
@@ -521,6 +537,7 @@
 				C838893E1E8955DA00C1AF60 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
