@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		C81199F91E8BE2E100C890AE /* LZBRecordVideoTool.m in Sources */ = {isa = PBXBuildFile; fileRef = C81199F81E8BE2E100C890AE /* LZBRecordVideoTool.m */; };
+		C8119A031E8D366000C890AE /* LZBAuthorizationManger.m in Sources */ = {isa = PBXBuildFile; fileRef = C8119A021E8D366000C890AE /* LZBAuthorizationManger.m */; };
 		C838890E1E8955DA00C1AF60 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = C838890D1E8955DA00C1AF60 /* main.m */; };
 		C83889111E8955DA00C1AF60 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C83889101E8955DA00C1AF60 /* AppDelegate.m */; };
 		C83889141E8955DA00C1AF60 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C83889131E8955DA00C1AF60 /* ViewController.m */; };
@@ -38,6 +39,8 @@
 /* Begin PBXFileReference section */
 		C81199F71E8BE2E100C890AE /* LZBRecordVideoTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LZBRecordVideoTool.h; sourceTree = "<group>"; };
 		C81199F81E8BE2E100C890AE /* LZBRecordVideoTool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LZBRecordVideoTool.m; sourceTree = "<group>"; };
+		C8119A011E8D366000C890AE /* LZBAuthorizationManger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LZBAuthorizationManger.h; sourceTree = "<group>"; };
+		C8119A021E8D366000C890AE /* LZBAuthorizationManger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LZBAuthorizationManger.m; sourceTree = "<group>"; };
 		C83889091E8955DA00C1AF60 /* LZBSecondRecordVideo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LZBSecondRecordVideo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C838890D1E8955DA00C1AF60 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		C838890F1E8955DA00C1AF60 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -86,6 +89,8 @@
 			children = (
 				C81199F71E8BE2E100C890AE /* LZBRecordVideoTool.h */,
 				C81199F81E8BE2E100C890AE /* LZBRecordVideoTool.m */,
+				C8119A011E8D366000C890AE /* LZBAuthorizationManger.h */,
+				C8119A021E8D366000C890AE /* LZBAuthorizationManger.m */,
 			);
 			path = LZBRecordVideoTool;
 			sourceTree = "<group>";
@@ -220,6 +225,7 @@
 				TargetAttributes = {
 					C83889081E8955DA00C1AF60 = {
 						CreatedOnToolsVersion = 8.2.1;
+						DevelopmentTeam = Y2H57HDYD9;
 						ProvisioningStyle = Automatic;
 					};
 					C83889211E8955DA00C1AF60 = {
@@ -287,6 +293,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C83889141E8955DA00C1AF60 /* ViewController.m in Sources */,
+				C8119A031E8D366000C890AE /* LZBAuthorizationManger.m in Sources */,
 				C83889111E8955DA00C1AF60 /* AppDelegate.m in Sources */,
 				C838890E1E8955DA00C1AF60 /* main.m in Sources */,
 				C81199F91E8BE2E100C890AE /* LZBRecordVideoTool.m in Sources */,
@@ -436,7 +443,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = Y2H57HDYD9;
 				INFOPLIST_FILE = LZBSecondRecordVideo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.lzbcoder.LZBSecondRecordVideo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -447,7 +456,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = Y2H57HDYD9;
 				INFOPLIST_FILE = LZBSecondRecordVideo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.lzbcoder.LZBSecondRecordVideo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
