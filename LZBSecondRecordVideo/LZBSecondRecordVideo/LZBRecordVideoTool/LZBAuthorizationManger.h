@@ -21,7 +21,12 @@
 + (BOOL)checkVideoMicrophoneAudioAuthorization;
 
 /**
- 检测相册是否授权
+   检测相册是否授权
  */
 + (BOOL)checkVideoPhotoAuthorization;
+
+/**
+    检测通讯录是否授权
+ */
++ (BOOL)checkContactsAuthorization;
 @end

@@ -20,16 +20,16 @@
 	<string>1</string>
     
     <key>NSCameraUsageDescription</key>
-    <string>cameraDesciption</string>
+    <string>xxxapp需要访问您的照相机</string>
     
     <key>NSContactsUsageDescription</key>
-    <string>contactsDesciption</string>
+    <string>xxxapp需要访问您的通讯录</string>
     
     <key>NSMicrophoneUsageDescription</key>
-    <string>microphoneDesciption</string>
+    <string>xxxapp需要访问您的麦克风</string>
     
     <key>NSPhotoLibraryUsageDescription</key>
-    <string>照片管理器</string>
+    <string>xxxapp需要访问您的照片管理器</string>
     
 	<key>LSRequiresIPhoneOS</key>
 	<true/>

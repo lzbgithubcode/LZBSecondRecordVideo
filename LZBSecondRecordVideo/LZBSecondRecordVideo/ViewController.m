@@ -17,8 +17,6 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [LZBAuthorizationManger checkVideoCameraAuthorization];
-    [LZBAuthorizationManger checkVideoMicrophoneAudioAuthorization];
 }
 
 
