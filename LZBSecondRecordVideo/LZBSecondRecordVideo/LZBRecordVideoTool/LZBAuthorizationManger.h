@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
+
 @interface LZBAuthorizationManger : NSObject
 
 /**
@@ -29,4 +30,9 @@
     检测通讯录是否授权
  */
 + (BOOL)checkContactsAuthorization;
+
+/**
+    检测位置定位是否授权
+ */
++ (BOOL)checkLocationAuthorization;
 @end

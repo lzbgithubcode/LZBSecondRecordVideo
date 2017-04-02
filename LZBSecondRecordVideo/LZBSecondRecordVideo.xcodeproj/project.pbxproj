@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C80CE3491E914C9900896F13 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C80CE3481E914C9900896F13 /* MapKit.framework */; };
 		C81199F91E8BE2E100C890AE /* LZBRecordVideoTool.m in Sources */ = {isa = PBXBuildFile; fileRef = C81199F81E8BE2E100C890AE /* LZBRecordVideoTool.m */; };
 		C8119A031E8D366000C890AE /* LZBAuthorizationManger.m in Sources */ = {isa = PBXBuildFile; fileRef = C8119A021E8D366000C890AE /* LZBAuthorizationManger.m */; };
 		C838890E1E8955DA00C1AF60 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = C838890D1E8955DA00C1AF60 /* main.m */; };
@@ -37,6 +38,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		C80CE3481E914C9900896F13 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		C81199F71E8BE2E100C890AE /* LZBRecordVideoTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LZBRecordVideoTool.h; sourceTree = "<group>"; };
 		C81199F81E8BE2E100C890AE /* LZBRecordVideoTool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LZBRecordVideoTool.m; sourceTree = "<group>"; };
 		C8119A011E8D366000C890AE /* LZBAuthorizationManger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LZBAuthorizationManger.h; sourceTree = "<group>"; };
@@ -64,6 +66,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C80CE3491E914C9900896F13 /* MapKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -84,6 +87,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		C80CE3471E914C9900896F13 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				C80CE3481E914C9900896F13 /* MapKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		C81199F61E8BE25900C890AE /* LZBRecordVideoTool */ = {
 			isa = PBXGroup;
 			children = (
@@ -102,6 +113,7 @@
 				C83889251E8955DA00C1AF60 /* LZBSecondRecordVideoTests */,
 				C83889301E8955DA00C1AF60 /* LZBSecondRecordVideoUITests */,
 				C838890A1E8955DA00C1AF60 /* Products */,
+				C80CE3471E914C9900896F13 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -227,6 +239,11 @@
 						CreatedOnToolsVersion = 8.2.1;
 						DevelopmentTeam = Y2H57HDYD9;
 						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.Maps.iOS = {
+								enabled = 0;
+							};
+						};
 					};
 					C83889211E8955DA00C1AF60 = {
 						CreatedOnToolsVersion = 8.2.1;

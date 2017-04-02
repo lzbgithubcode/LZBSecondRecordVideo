@@ -14,9 +14,36 @@
 #import <AssetsLibrary/AssetsLibrary.h>
 #import <AddressBook/AddressBook.h>
 #import <Contacts/Contacts.h>
+#import <CoreLocation/CLLocationManager.h>
 
 //照相机设置
-#define cameraSetting   @"prefs:root=Privacy&path=CAMERA"
+#define cameraSetting   @"prefs:root=Privacy"
+
+typedef NS_ENUM(NSInteger,LZBAppSettingType)
+{
+     LZBAppSettingType_None,  //没有
+      //iOS10.0之后没有用，直接跳转到设置页面可以获取权限
+     LZBAppSettingType_Camera,  //照相机
+     LZBAppSettingType_Photos,  //相片库
+     LZBAppSettingType_Microphone,  //麦克风
+     LZBAppSettingType_Contact,  //通讯录
+    
+};
+
+//iOS10.0之后默认只能跳转到设置页面,系统会自动跳转到设备对应权限的页面
+NSString *LZBAppSettingTypeValue[] =
+{
+    [LZBAppSettingType_None] = @"",
+     //iOS10.0之后没有用，直接跳转到设置页面可以获取权限
+    [LZBAppSettingType_Camera] = @"Prefs:root=General&path=CAMERA",
+    [LZBAppSettingType_Photos] = @"Prefs:root=Photos",
+    [LZBAppSettingType_Microphone] = @"Prefs:root=Privacy&path=MICROPHONE",
+    [LZBAppSettingType_Contact] = @"Prefs:root=Privacy&path=CONTACTS",
+};
+
+@interface LZBAuthorizationManger()
+
+@end
 
 @implementation LZBAuthorizationManger
 /**
@@ -45,7 +72,7 @@
                 if(!granted)  //如果不允许
                 {
                     dispatch_async(dispatch_get_main_queue(), ^{
-                        [weakSelf checkVideoCameraAuthorization];
+                        [weakSelf gotoSettingPrivacyWithType:LZBAppSettingType_None];
                     });
                 }
             }];
@@ -85,7 +112,7 @@
                     {
                         //回到主线程
                         dispatch_async(dispatch_get_main_queue(), ^{
-                            [weakSelf checkVideoMicrophoneAudioAuthorization];
+                             [weakSelf gotoSettingPrivacyWithType:LZBAppSettingType_None];
                         });
                     }
                 }];
@@ -124,7 +151,7 @@
                 }else{
                     isAvalible = NO;  //回到主线程
                     dispatch_async(dispatch_get_main_queue(), ^{
-                        [weakSelf checkVideoPhotoAuthorization];
+                        [weakSelf gotoSettingPrivacyWithType:LZBAppSettingType_None];
                     });
                 }
             }];
@@ -169,7 +196,7 @@
                         isAvalible = granted;
                         if (!granted) {
                             dispatch_async(dispatch_get_main_queue(), ^{
-                                [weakSelf checkContactsAuthorization];
+                                 [weakSelf gotoSettingPrivacyWithType:LZBAppSettingType_None];
                             });
                         }
                         if (addressBook) {
@@ -207,7 +234,7 @@
                     isAvalible = granted;
                     if (!granted) {
                         dispatch_async(dispatch_get_main_queue(), ^{
-                            [weakSelf checkContactsAuthorization];
+                             [weakSelf gotoSettingPrivacyWithType:LZBAppSettingType_None];
                         });
                     }
                 }];
@@ -221,6 +248,44 @@
     
 
     return isAvalible;
+}
+
++ (BOOL)checkLocationAuthorization
+{
+    __block BOOL isAvalible = NO;
+   if(![CLLocationManager locationServicesEnabled])
+       return NO;
+   CLAuthorizationStatus locationStatus =  [CLLocationManager authorizationStatus];
+    switch (locationStatus) {
+        case kCLAuthorizationStatusAuthorizedAlways:
+            isAvalible = NO;
+            break;
+        case kCLAuthorizationStatusNotDetermined:
+        {
+            isAvalible = NO;
+        }
+            break;
+        case kCLAuthorizationStatusRestricted:
+            isAvalible = NO;
+            break;
+        case kCLAuthorizationStatusDenied:
+        {
+            [self showWithMessage:@"此功能需要您授权本App打开相册\n设置方法:打开手机设置->隐私->位置信息"];
+            isAvalible = NO;
+        }
+            break;
+        case kCLAuthorizationStatusAuthorizedWhenInUse:
+            isAvalible = YES;
+            break;
+            
+        default:
+            break;
+    }
+    return isAvalible;
+}
+- (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status
+{
+   
 }
 
 
@@ -240,4 +305,23 @@
         [[UIApplication sharedApplication]openURL:url];
     }
 }
+
+
+/**
+   跳转到设置权限界面
+ */
++ (void)gotoSettingPrivacyWithType:(LZBAppSettingType)type
+{
+    NSString *jumpString =LZBAppSettingTypeValue[type];
+    if(jumpString.length == 0)
+    {
+        [self gotoSetting];
+        return;
+    }
+    NSURL *url = [NSURL URLWithString:jumpString];
+    if ([[UIApplication sharedApplication]canOpenURL:url]) {
+        [[UIApplication sharedApplication]openURL:url];
+    }
+}
+
 @end

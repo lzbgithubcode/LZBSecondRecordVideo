@@ -17,12 +17,9 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-}
-
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+    BOOL author = [LZBAuthorizationManger checkLocationAuthorization];
+     NSLog(@"FUNCTION NAME:%s, LINE:%d \n \n------%d", __FUNCTION__, __LINE__,author);
+    
 }
 
 
