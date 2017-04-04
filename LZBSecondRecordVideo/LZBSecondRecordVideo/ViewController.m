@@ -17,7 +17,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    BOOL author = [LZBAuthorizationManger checkLocationAuthorization];
+    BOOL author = [LZBAuthorizationManger checkContactsAuthorization];
      NSLog(@"FUNCTION NAME:%s, LINE:%d \n \n------%d", __FUNCTION__, __LINE__,author);
     
 }

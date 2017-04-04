@@ -14,11 +14,7 @@
 #import <AssetsLibrary/AssetsLibrary.h>
 #import <AddressBook/AddressBook.h>
 #import <Contacts/Contacts.h>
-#import <CoreLocation/CLLocationManager.h>
-
-//照相机设置
-#define cameraSetting   @"prefs:root=Privacy"
-
+#import <CoreLocation/CoreLocation.h>
 typedef NS_ENUM(NSInteger,LZBAppSettingType)
 {
      LZBAppSettingType_None,  //没有
@@ -41,8 +37,9 @@ NSString *LZBAppSettingTypeValue[] =
     [LZBAppSettingType_Contact] = @"Prefs:root=Privacy&path=CONTACTS",
 };
 
-@interface LZBAuthorizationManger()
+@interface LZBAuthorizationManger()<CLLocationManagerDelegate>
 
+@property (nonatomic, strong) CLLocationManager *locationManger;
 @end
 
 @implementation LZBAuthorizationManger
@@ -246,7 +243,6 @@ NSString *LZBAppSettingTypeValue[] =
         }
     }
     
-
     return isAvalible;
 }
 
@@ -283,11 +279,6 @@ NSString *LZBAppSettingTypeValue[] =
     }
     return isAvalible;
 }
-- (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status
-{
-   
-}
-
 
 #pragma mark - 弹框
 //弹框提示
@@ -322,6 +313,19 @@ NSString *LZBAppSettingTypeValue[] =
     if ([[UIApplication sharedApplication]canOpenURL:url]) {
         [[UIApplication sharedApplication]openURL:url];
     }
+}
+
+- (CLLocationManager *)locationManger
+{
+  if(_locationManger == nil)
+  {
+      _locationManger = [[CLLocationManager alloc]init];
+      _locationManger.delegate = self;
+      // 最小距离
+      _locationManger.distanceFilter = 50.f;
+      _locationManger.desiredAccuracy = kCLLocationAccuracyBest;
+  }
+    return _locationManger;
 }
 
 @end
