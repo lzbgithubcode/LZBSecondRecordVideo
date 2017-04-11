@@ -10,6 +10,7 @@
 		C80CE3491E914C9900896F13 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C80CE3481E914C9900896F13 /* MapKit.framework */; };
 		C81199F91E8BE2E100C890AE /* LZBRecordVideoTool.m in Sources */ = {isa = PBXBuildFile; fileRef = C81199F81E8BE2E100C890AE /* LZBRecordVideoTool.m */; };
 		C8119A031E8D366000C890AE /* LZBAuthorizationManger.m in Sources */ = {isa = PBXBuildFile; fileRef = C8119A021E8D366000C890AE /* LZBAuthorizationManger.m */; };
+		C83077871E9D234F00A75AAD /* LZBWriterVideoTool.m in Sources */ = {isa = PBXBuildFile; fileRef = C83077861E9D234F00A75AAD /* LZBWriterVideoTool.m */; };
 		C838890E1E8955DA00C1AF60 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = C838890D1E8955DA00C1AF60 /* main.m */; };
 		C83889111E8955DA00C1AF60 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C83889101E8955DA00C1AF60 /* AppDelegate.m */; };
 		C83889141E8955DA00C1AF60 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C83889131E8955DA00C1AF60 /* ViewController.m */; };
@@ -43,6 +44,8 @@
 		C81199F81E8BE2E100C890AE /* LZBRecordVideoTool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LZBRecordVideoTool.m; sourceTree = "<group>"; };
 		C8119A011E8D366000C890AE /* LZBAuthorizationManger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LZBAuthorizationManger.h; sourceTree = "<group>"; };
 		C8119A021E8D366000C890AE /* LZBAuthorizationManger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LZBAuthorizationManger.m; sourceTree = "<group>"; };
+		C83077851E9D234F00A75AAD /* LZBWriterVideoTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LZBWriterVideoTool.h; sourceTree = "<group>"; };
+		C83077861E9D234F00A75AAD /* LZBWriterVideoTool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LZBWriterVideoTool.m; sourceTree = "<group>"; };
 		C83889091E8955DA00C1AF60 /* LZBSecondRecordVideo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LZBSecondRecordVideo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C838890D1E8955DA00C1AF60 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		C838890F1E8955DA00C1AF60 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -98,6 +101,8 @@
 		C81199F61E8BE25900C890AE /* LZBRecordVideoTool */ = {
 			isa = PBXGroup;
 			children = (
+				C83077851E9D234F00A75AAD /* LZBWriterVideoTool.h */,
+				C83077861E9D234F00A75AAD /* LZBWriterVideoTool.m */,
 				C81199F71E8BE2E100C890AE /* LZBRecordVideoTool.h */,
 				C81199F81E8BE2E100C890AE /* LZBRecordVideoTool.m */,
 				C8119A011E8D366000C890AE /* LZBAuthorizationManger.h */,
@@ -313,6 +318,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C83889141E8955DA00C1AF60 /* ViewController.m in Sources */,
+				C83077871E9D234F00A75AAD /* LZBWriterVideoTool.m in Sources */,
 				C8119A031E8D366000C890AE /* LZBAuthorizationManger.m in Sources */,
 				C83889111E8955DA00C1AF60 /* AppDelegate.m in Sources */,
 				C838890E1E8955DA00C1AF60 /* main.m in Sources */,

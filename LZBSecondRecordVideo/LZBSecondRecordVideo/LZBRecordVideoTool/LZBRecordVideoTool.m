@@ -10,6 +10,7 @@
 
 #define kLZBRecordVideoToolRecordSessionQueueKey "LZBRecordVideoToolRecordSessionQueue"
 
+#define dispatch_main_handle(x) if(x!=nil) dispatch_async(dispatch_get_main_queue(), x)
 @interface LZBRecordVideoTool() <AVCaptureVideoDataOutputSampleBufferDelegate,AVCaptureAudioDataOutputSampleBufferDelegate>
 @property (nonatomic, strong)  AVCaptureSession         *captureSession;  //管理数据采集中心协调对象
 @property (nonatomic,  copy)   dispatch_queue_t         captureSessionQueue;//录制的队列
@@ -21,9 +22,116 @@
 @property (nonatomic, strong)  AVCaptureConnection      *videoConnection;//视频连接，确定视频录制方向
 @property (nonatomic, strong)  AVCaptureVideoPreviewLayer *previewLayer;//捕获到的视频呈现的layer
 
+//状态记录
+@property (nonatomic, assign) BOOL isRecording;
+@property (nonatomic, assign) BOOL isPaused;
+
 @end
 
 @implementation LZBRecordVideoTool
++ (LZBRecordVideoTool *)sharedRecordVideoTool {
+    static LZBRecordVideoTool *_recordVideoTool = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        _recordVideoTool = [[LZBRecordVideoTool alloc]init];
+    });
+    
+    return _recordVideoTool;
+}
+
++(BOOL)isCaputureSessionQueue
+{
+    return dispatch_get_specific(kLZBRecordVideoToolRecordSessionQueueKey)!=nil;
+}
+
+#pragma mark - API
+//启动录制功能
+- (void)startCaputureFunction
+{
+    if(self.captureSession == nil) return;
+    if(self.captureSession.isRunning) return;
+    [self.captureSession startRunning];
+    self.isRecording = NO;
+    self.isPaused = NO;
+    
+}
+//关闭录制功能
+- (void)stopCaputureFunction
+{
+    if(self.captureSession)
+        [self.captureSession stopRunning];
+}
+
+//开始录制
+- (void)startRecord
+{
+    //定义block
+    __weak typeof(self) weakSelf = self;
+    
+    void (^startRecordBlock)() = ^{
+        if(weakSelf.captureSession == nil) return;
+        if(weakSelf.isRecording) return;
+        weakSelf.isRecording = YES;
+    };
+    
+   if([LZBRecordVideoTool isCaputureSessionQueue])
+   {
+       if(startRecordBlock)
+           startRecordBlock();
+   }
+   else
+   {
+      dispatch_sync(self.captureSessionQueue, startRecordBlock);
+   }
+}
+
+//停止录制
+- (void)stopRecord
+{
+    [self stopRecordHandler:nil];
+}
+//停止录制
+- (void)stopRecordHandler:(void(^)(UIImage *snapImage))handler
+{
+    //定义block
+    __weak typeof(self) weakSelf = self;
+    
+    void (^stopRecordBlock)() = ^{
+        if(weakSelf.captureSession == nil) return;
+        if(!weakSelf.isRecording) return;
+        weakSelf.isRecording = NO;
+    };
+    if([LZBRecordVideoTool isCaputureSessionQueue])
+    {
+        if(stopRecordBlock)
+            stopRecordBlock();
+    }
+    else
+    {
+        dispatch_sync(self.captureSessionQueue, stopRecordBlock);
+    }
+}
+
+
+
+//消失的时候移除设备
+- (void)dellocRemoveDevice
+{
+    if(self.captureSession == nil) return;
+    //移除输入设备
+    for (AVCaptureDeviceInput *input in self.captureSession.inputs)
+    {
+        [self.captureSession removeInput:input];
+    }
+    //移除输出设备
+    for (AVCaptureOutput *output in self.captureSession.outputs) {
+        [self.captureSession removeOutput:output];
+    }
+    self.previewLayer.session = nil;
+    self.captureSession = nil;
+}
+#pragma mark- handel
+
 
 
 
@@ -179,7 +287,9 @@
    if(_captureSessionQueue == nil)
    {
        _captureSessionQueue = dispatch_queue_create("com.LZBRecordTool.caputuer", DISPATCH_QUEUE_SERIAL);
+       //标记_captureSessionQueue队列
        dispatch_queue_set_specific(_captureSessionQueue, kLZBRecordVideoToolRecordSessionQueueKey,"true", nil);
+        //设置_captureSessionQueue在全局队列的优先级
        dispatch_set_target_queue(_captureSessionQueue, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0));
    }
     return _captureSessionQueue;
