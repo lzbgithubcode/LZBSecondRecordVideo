@@ -132,8 +132,20 @@
 }
 #pragma mark- handel
 
-
-
+//获取当前视频的帧速率
+- (CMTime)videoMaxFrameDurationFromConnection:(AVCaptureConnection *)connection
+{
+     AVCaptureDevice *device = [self currentVideoDeviceInput].device;
+    if ([device respondsToSelector:@selector(activeVideoMaxFrameDuration)])
+    {
+        return device.activeVideoMinFrameDuration;
+    }
+    else
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+        return connection.videoMinFrameDuration;
+#pragma clang diagnostic pop
+}
 
 #pragma mark- lazy
 //捕获到的视频呈现的layer
@@ -293,5 +305,28 @@
        dispatch_set_target_queue(_captureSessionQueue, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0));
    }
     return _captureSessionQueue;
+}
+
+//获取当前音频的输入设备
+- (AVCaptureDeviceInput*)currentAudioDeviceInput
+{
+    return [self currentInputDeviceForMediaType:AVMediaTypeAudio];
+}
+//获取当前视频的输入设备
+- (AVCaptureDeviceInput*)currentVideoDeviceInput {
+    return [self currentInputDeviceForMediaType:AVMediaTypeVideo];
+}
+
+//根据媒体类型获取当前输入设备
+- (AVCaptureDeviceInput *)currentInputDeviceForMediaType:(NSString *)mediaType
+{
+    for (AVCaptureDeviceInput* deviceInput in self.captureSession.inputs)
+    {
+        if ([deviceInput.device hasMediaType:mediaType])
+        {
+            return deviceInput;
+        }
+    }
+    return nil;
 }
 @end

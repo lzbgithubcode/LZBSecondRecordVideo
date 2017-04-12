@@ -34,7 +34,7 @@
  @param paramModel 参数配置模型
  @return LZBWriterVideoTool
  */
-+ (LZBWriterVideoTool *)writerVideoWithPath:(NSString *)path configParamModel:(LZBWriterVideoConfigModel *)paramModel;
++ (LZBWriterVideoTool *)writerVideoWithPath:(NSString *)path configParamModel:(LZBWriterVideoConfigModel *)paramModel  sampleBuffer:(CMSampleBufferRef)sampleBuffer;
 
 
 /**
@@ -43,19 +43,19 @@
  @param paramModel 参数配置模型
  @return LZBWriterVideoTool
  */
-- (instancetype)initWithPath:(NSString *)path configParamModel:(LZBWriterVideoConfigModel *)paramModel;
+- (instancetype)initWithPath:(NSString *)path configParamModel:(LZBWriterVideoConfigModel *)paramModel sampleBuffer:(CMSampleBufferRef)sampleBuffer;
 
 
 /**
- 写入视频数据
+ 写入视频数据，设置帧速率
  @param sampleBuffer 写入的数据
  */
-- (void)writerVideoDataSampleBuffer:(CMSampleBufferRef)sampleBuffer;
+- (void)writerVideoDataSampleBuffer:(CMSampleBufferRef)sampleBuffer frameDuration:(CMTime)frameDuration completion:(void (^)(BOOL suceess))completion;
 
 /**
- 写入音频数据
+ 写入音频数据,设置帧速率
  @param sampleBuffer 写入的数据
  */
-- (void)writerAudioDataSampleBuffer:(CMSampleBufferRef)sampleBuffer;
+- (void)writerAudioDataSampleBuffer:(CMSampleBufferRef)sampleBuffer frameDuration:(CMTime)frameDuration completion:(void (^)(BOOL suceess))completion;
 
 @end
