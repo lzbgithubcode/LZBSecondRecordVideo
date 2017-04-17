@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 #import <AVFoundation/AVFoundation.h>
+#import "LZBAudioConfigModel.h"
+#import "LZBVideoConfigModel.h"
 
 @interface LZBRecordVideoTool : NSObject
 
@@ -16,6 +18,16 @@
  */
 @property (nonatomic, assign) CMTime maxRecordDuration;
 
+
+/**
+ 输出视频参数配置模型
+ */
+@property (nonatomic, strong, readonly) LZBAudioConfigModel *audioConfigModel;
+
+/**
+  输出音频参数配置模型
+ */
+@property (nonatomic, strong, readonly) LZBVideoConfigModel *videoConfigModel;
 /**
    是否正在录制
  */

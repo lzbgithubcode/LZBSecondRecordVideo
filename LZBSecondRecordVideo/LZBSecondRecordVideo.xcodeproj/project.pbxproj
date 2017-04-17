@@ -19,6 +19,9 @@
 		C838891C1E8955DA00C1AF60 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C838891A1E8955DA00C1AF60 /* LaunchScreen.storyboard */; };
 		C83889271E8955DA00C1AF60 /* LZBSecondRecordVideoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C83889261E8955DA00C1AF60 /* LZBSecondRecordVideoTests.m */; };
 		C83889321E8955DA00C1AF60 /* LZBSecondRecordVideoUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = C83889311E8955DA00C1AF60 /* LZBSecondRecordVideoUITests.m */; };
+		C8740C7C1EA513000092D300 /* LZBMediaTypeConfigModel.m in Sources */ = {isa = PBXBuildFile; fileRef = C8740C7B1EA513000092D300 /* LZBMediaTypeConfigModel.m */; };
+		C8740C7F1EA513660092D300 /* LZBVideoConfigModel.m in Sources */ = {isa = PBXBuildFile; fileRef = C8740C7E1EA513660092D300 /* LZBVideoConfigModel.m */; };
+		C8740C821EA5139A0092D300 /* LZBAudioConfigModel.m in Sources */ = {isa = PBXBuildFile; fileRef = C8740C811EA5139A0092D300 /* LZBAudioConfigModel.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -62,6 +65,12 @@
 		C838892D1E8955DA00C1AF60 /* LZBSecondRecordVideoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LZBSecondRecordVideoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C83889311E8955DA00C1AF60 /* LZBSecondRecordVideoUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LZBSecondRecordVideoUITests.m; sourceTree = "<group>"; };
 		C83889331E8955DA00C1AF60 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C8740C7A1EA513000092D300 /* LZBMediaTypeConfigModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LZBMediaTypeConfigModel.h; sourceTree = "<group>"; };
+		C8740C7B1EA513000092D300 /* LZBMediaTypeConfigModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LZBMediaTypeConfigModel.m; sourceTree = "<group>"; };
+		C8740C7D1EA513660092D300 /* LZBVideoConfigModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LZBVideoConfigModel.h; sourceTree = "<group>"; };
+		C8740C7E1EA513660092D300 /* LZBVideoConfigModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LZBVideoConfigModel.m; sourceTree = "<group>"; };
+		C8740C801EA5139A0092D300 /* LZBAudioConfigModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LZBAudioConfigModel.h; sourceTree = "<group>"; };
+		C8740C811EA5139A0092D300 /* LZBAudioConfigModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LZBAudioConfigModel.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,6 +110,7 @@
 		C81199F61E8BE25900C890AE /* LZBRecordVideoTool */ = {
 			isa = PBXGroup;
 			children = (
+				C8740C791EA512D40092D300 /* Configuration */,
 				C83077851E9D234F00A75AAD /* LZBWriterVideoTool.h */,
 				C83077861E9D234F00A75AAD /* LZBWriterVideoTool.m */,
 				C81199F71E8BE2E100C890AE /* LZBRecordVideoTool.h */,
@@ -173,6 +183,19 @@
 				C83889331E8955DA00C1AF60 /* Info.plist */,
 			);
 			path = LZBSecondRecordVideoUITests;
+			sourceTree = "<group>";
+		};
+		C8740C791EA512D40092D300 /* Configuration */ = {
+			isa = PBXGroup;
+			children = (
+				C8740C7A1EA513000092D300 /* LZBMediaTypeConfigModel.h */,
+				C8740C7B1EA513000092D300 /* LZBMediaTypeConfigModel.m */,
+				C8740C7D1EA513660092D300 /* LZBVideoConfigModel.h */,
+				C8740C7E1EA513660092D300 /* LZBVideoConfigModel.m */,
+				C8740C801EA5139A0092D300 /* LZBAudioConfigModel.h */,
+				C8740C811EA5139A0092D300 /* LZBAudioConfigModel.m */,
+			);
+			path = Configuration;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -318,10 +341,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				C83889141E8955DA00C1AF60 /* ViewController.m in Sources */,
+				C8740C821EA5139A0092D300 /* LZBAudioConfigModel.m in Sources */,
 				C83077871E9D234F00A75AAD /* LZBWriterVideoTool.m in Sources */,
+				C8740C7C1EA513000092D300 /* LZBMediaTypeConfigModel.m in Sources */,
 				C8119A031E8D366000C890AE /* LZBAuthorizationManger.m in Sources */,
 				C83889111E8955DA00C1AF60 /* AppDelegate.m in Sources */,
 				C838890E1E8955DA00C1AF60 /* main.m in Sources */,
+				C8740C7F1EA513660092D300 /* LZBVideoConfigModel.m in Sources */,
 				C81199F91E8BE2E100C890AE /* LZBRecordVideoTool.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

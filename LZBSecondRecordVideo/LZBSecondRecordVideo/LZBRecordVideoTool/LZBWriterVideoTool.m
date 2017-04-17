@@ -8,6 +8,9 @@
 
 #import "LZBWriterVideoTool.h"
 
+@implementation LZBWriterVideoConfigModel
+@end
+
 @interface LZBWriterVideoTool()
 @property (nonatomic, strong) NSString *writerPath;//写入路径
 @property (nonatomic, strong) AVAssetWriter *writer;//媒体写入对象
@@ -15,6 +18,7 @@
 @property (nonatomic, strong) AVAssetWriterInput *audioWriter;//音频写入对象
 @property (nonatomic, assign) CMTime startTime;   //存放开始记录时间
 @property (nonatomic, strong) AVAssetWriterInputPixelBufferAdaptor *videoPixelBufferAdaptor;
+@property (nonatomic, copy)   dispatch_queue_t audioWriterQueue;
 @end
 
 @implementation LZBWriterVideoTool
@@ -41,14 +45,14 @@
         //使其更适合在网络上播放
         self.writer.shouldOptimizeForNetworkUse = YES;
          //初始化视频写入
-        if(paramModel.writerVideoSetting !=nil)
+        if(paramModel.outputVideoSetting !=nil)
         {
-            [self initVideoWriterWithParam:paramModel.writerVideoSetting sampleBuffer:sampleBuffer];
+            [self initVideoWriterWithParam:paramModel.outputVideoSetting sampleBuffer:sampleBuffer];
         }
         //初始化音频输入
-        if(paramModel.writerAudioSetting !=nil)
+        if(paramModel.outputAudioSetting !=nil)
         {
-            [self initAudioWriterWithParam:paramModel.writerAudioSetting sampleBuffer:sampleBuffer];
+            [self initAudioWriterWithParam:paramModel.outputAudioSetting sampleBuffer:sampleBuffer];
         }
         
     }
@@ -100,7 +104,12 @@
    CMTime time = CMSampleBufferGetPresentationTimeStamp(sampleBuffer);
    
     //可以增加滤镜
-    
+//    CVPixelBufferRef pixelBuffer = [self createPixelBuffer];
+//    if (pixelBuffer == nil) {
+//        if(completion)
+//            completion(NO);
+//        return;
+//    }
     //写入像素
     [self appendVideoPixelBuffer:imageBuffer atTime:time duration:frameDuration completion:completion];
 }
@@ -137,8 +146,82 @@
 }
 
 #pragma mark - 写入音频数据
-- (void)writerAudioDataSampleBuffer:(CMSampleBufferRef)sampleBuffer frameDuration:(CMTime)frameDuration completion:(void (^)(BOOL suceess))completion
+- (void)writerAudioDataSampleBuffer:(CMSampleBufferRef)sampleBuffer completion:(void (^)(BOOL suceess))completion
 {
-  
+    if(self.videoWriter == nil) return;
+    if(!CMSampleBufferDataIsReady(sampleBuffer)) return;
+    //获取真实写入的CMTime
+    CMTime time = CMSampleBufferGetPresentationTimeStamp(sampleBuffer);
+    [self appendAudioSampleBuffer:sampleBuffer atTime:time completion:completion];
+    
+}
+
+//写入音频数据
+- (void)appendAudioSampleBuffer:(CMSampleBufferRef)audioSampleBuffer atTime:(CMTime)currentBufferTime completion:(void (^)(BOOL suceess))completion
+{
+    //开始写入
+    [self startWriterDataWithstartTime:currentBufferTime];
+    //获取音频时长
+    CMTime duration = CMSampleBufferGetDuration(audioSampleBuffer);
+    //音频分段组合
+    CMSampleBufferRef adjustedBuffer = [self adjustBuffer:audioSampleBuffer withTimeOffset:kCMTimeZero andDuration:duration];
+    
+    //子线程增加音频
+    dispatch_async(self.audioWriterQueue, ^{
+        if([_audioWriter isReadyForMoreMediaData])
+        {
+            [_audioWriter appendSampleBuffer:adjustedBuffer];
+            if(completion)
+                completion(YES);
+        }
+        else
+        {
+          if(completion)
+              completion(NO);
+        }
+        
+    });
+    
+}
+
+//调节音频，暂停和恢复后，需要调整时间戳（或视频中会有暂停） http://www.gdcl.co.uk/2013/02/20/iPhone-Pause.html
+- (CMSampleBufferRef)adjustBuffer:(CMSampleBufferRef)sample withTimeOffset:(CMTime)offset andDuration:(CMTime)duration
+{
+    //音频分段调节，不能改变采样频率
+    CMItemCount count;
+    CMSampleBufferGetSampleTimingInfoArray(sample, 0, nil, &count);
+    CMSampleTimingInfo *info = malloc(sizeof(CMSampleTimingInfo) * count);
+    CMSampleBufferGetSampleTimingInfoArray(sample, count, info, &count);
+    for (CMItemCount i = 0; i < count; i++) {
+        info[i].decodeTimeStamp = CMTimeSubtract(info[i].decodeTimeStamp, offset);
+        info[i].presentationTimeStamp = CMTimeSubtract(info[i].presentationTimeStamp, offset);
+        info[i].duration = duration;
+    }
+    
+    CMSampleBufferRef sout;
+    CMSampleBufferCreateCopyWithNewTiming(nil, sample, count, info, &sout);
+    free(info);
+    return sout;
+}
+
+//通过缓存像素池自动创建像素缓存对象
+- (CVPixelBufferRef)createPixelBuffer {
+    CVPixelBufferRef outputPixelBuffer = nil;
+    CVReturn ret = CVPixelBufferPoolCreatePixelBuffer(NULL, [self.videoPixelBufferAdaptor pixelBufferPool], &outputPixelBuffer);
+    
+    if (ret != kCVReturnSuccess) {
+        NSLog(@"创建CVPixelBufferRef失败----%d", ret);
+    }
+    
+    return outputPixelBuffer;
+}
+
+- (dispatch_queue_t)audioWriterQueue
+{
+  if(_audioWriterQueue == nil)
+  {
+      _audioWriterQueue = dispatch_queue_create("com.lzb.LZBSecondRecordViedeo", nil);
+  }
+    return _audioWriterQueue;
 }
 @end

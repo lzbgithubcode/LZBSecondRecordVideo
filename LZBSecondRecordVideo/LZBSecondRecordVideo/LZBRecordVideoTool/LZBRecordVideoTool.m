@@ -7,6 +7,7 @@
 //
 
 #import "LZBRecordVideoTool.h"
+#import "LZBWriterVideoTool.h"
 
 #define kLZBRecordVideoToolRecordSessionQueueKey "LZBRecordVideoToolRecordSessionQueue"
 
@@ -21,6 +22,12 @@
 @property (nonatomic, strong)  AVCaptureAudioDataOutput *audioOutput;//音频输出
 @property (nonatomic, strong)  AVCaptureConnection      *videoConnection;//视频连接，确定视频录制方向
 @property (nonatomic, strong)  AVCaptureVideoPreviewLayer *previewLayer;//捕获到的视频呈现的layer
+
+//数据写入
+@property (nonatomic, strong) LZBWriterVideoTool *writerTool;
+@property (nonatomic, strong) LZBWriterVideoConfigModel *writerConfigModel;
+@property (nonatomic, strong) LZBAudioConfigModel *audioConfigModel;
+@property (nonatomic, strong) LZBVideoConfigModel *videoConfigModel;
 
 //状态记录
 @property (nonatomic, assign) BOOL isRecording;
@@ -37,6 +44,15 @@
     });
     
     return _recordVideoTool;
+}
+- (instancetype)init
+{
+   if(self = [super init])
+   {
+       self.videoConfigModel = [[LZBVideoConfigModel alloc]init];
+       self.audioConfigModel = [[LZBAudioConfigModel alloc]init];
+   }
+    return self;
 }
 
 +(BOOL)isCaputureSessionQueue
@@ -130,7 +146,54 @@
     self.previewLayer.session = nil;
     self.captureSession = nil;
 }
+
+
 #pragma mark- handel
+
+- (void)captureOutput:(AVCaptureOutput *)captureOutput didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection
+{
+    if(!self.isRecording) return;
+    if(self.captureSession == nil) return;
+    
+    //设置最后输出视频的参数
+    NSDictionary *videoOutSetting = [self.videoConfigModel getOutVideoFomartWithOptionsUsingSampleBuffer:sampleBuffer];
+    self.writerConfigModel.outputVideoSetting = videoOutSetting;
+    
+    //设置最后输出音频的参数
+    NSDictionary *audioOutSetting = [self.audioConfigModel getOutAudioOptionsUsingSampleBuffer:sampleBuffer];
+    self.writerConfigModel.outputAudioSetting = audioOutSetting;
+    
+     if(self.writerTool == nil)
+     {
+         self.writerTool = [LZBWriterVideoTool writerVideoWithPath:nil configParamModel:self.writerConfigModel sampleBuffer:sampleBuffer];
+     }
+
+    //如果是视频
+    if(captureOutput == self.videoOutput)
+    {
+        [self handleVideoSampleBuffer:sampleBuffer connection:connection];
+    }
+    else if (captureOutput == self.audioOutput)
+    {
+        [self handleAudioSampleBuffer:sampleBuffer];
+    }
+}
+//处理视频
+-(void)handleVideoSampleBuffer:(CMSampleBufferRef)videoSampleBuffer connection:(AVCaptureConnection *)connection
+{
+    CMTime duration = [self videoMaxFrameDurationFromConnection:connection];
+   [self.writerTool writerVideoDataSampleBuffer:videoSampleBuffer frameDuration:duration completion:^(BOOL suceess) {
+       
+   }];
+   
+}
+//处理音频
+-(void)handleAudioSampleBuffer:(CMSampleBufferRef)audioSampleBuffer
+{
+    [self.writerTool writerAudioDataSampleBuffer:audioSampleBuffer completion:^(BOOL suceess) {
+        
+    }];
+}
 
 //获取当前视频的帧速率
 - (CMTime)videoMaxFrameDurationFromConnection:(AVCaptureConnection *)connection
@@ -329,4 +392,14 @@
     }
     return nil;
 }
+
+- (LZBWriterVideoConfigModel *)writerConfigModel
+{
+  if(_writerConfigModel == nil)
+  {
+      _writerConfigModel = [[LZBWriterVideoConfigModel alloc]init];
+  }
+    return _writerConfigModel;
+}
+
 @end

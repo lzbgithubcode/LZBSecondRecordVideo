@@ -11,13 +11,13 @@
 @interface LZBWriterVideoConfigModel : NSObject
 
 /**
- 写入音频配置参数
+ 输出音频配置参数
  */
-@property (nonatomic, strong) NSDictionary *writerAudioSetting;
+@property (nonatomic, strong) NSDictionary *outputAudioSetting;
 /**
- 写入视频配置参数
+ 输出视频配置参数
  */
-@property (nonatomic, strong) NSDictionary *writerVideoSetting;
+@property (nonatomic, strong) NSDictionary *outputVideoSetting;
 @end
 
 
@@ -56,6 +56,6 @@
  写入音频数据,设置帧速率
  @param sampleBuffer 写入的数据
  */
-- (void)writerAudioDataSampleBuffer:(CMSampleBufferRef)sampleBuffer frameDuration:(CMTime)frameDuration completion:(void (^)(BOOL suceess))completion;
+- (void)writerAudioDataSampleBuffer:(CMSampleBufferRef)sampleBuffer completion:(void (^)(BOOL suceess))completion;
 
 @end
