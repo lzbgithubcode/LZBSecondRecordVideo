@@ -24,12 +24,12 @@
 @implementation LZBWriterVideoTool
 
 //实例化LZBWriterVideoTool
-+ (LZBWriterVideoTool *)writerVideoWithPath:(NSString *)path configParamModel:(LZBWriterVideoConfigModel *)paramModel  sampleBuffer:(CMSampleBufferRef)sampleBuffer
++ (LZBWriterVideoTool *)writerVideoWithPath:(NSString *)path configParamModel:(LZBWriterVideoConfigModel *)paramModel  sampleBuffer:(CMSampleBufferRef)sampleBuffer failCallBack:(void(^)(NSError *error))failureBlock
 {
-    return [[LZBWriterVideoTool alloc]initWithPath:path configParamModel:paramModel sampleBuffer:sampleBuffer];
+    return [[LZBWriterVideoTool alloc]initWithPath:path configParamModel:paramModel sampleBuffer:sampleBuffer failCallBack:failureBlock];
 }
 //初始化LZBWriterVideoTool
-- (instancetype)initWithPath:(NSString *)path configParamModel:(LZBWriterVideoConfigModel *)paramModel sampleBuffer:(CMSampleBufferRef)sampleBuffer
+- (instancetype)initWithPath:(NSString *)path configParamModel:(LZBWriterVideoConfigModel *)paramModel sampleBuffer:(CMSampleBufferRef)sampleBuffer failCallBack:(void(^)(NSError *error))failureBlock
 {
     if(self = [super init])
     {
@@ -41,7 +41,15 @@
         //初始化当前的写入对象,必须是文件路径
         NSURL *url = [NSURL fileURLWithPath:self.writerPath];
          //初始化写入媒体类型为MP4类型,url必须是文件路径
-        self.writer = [AVAssetWriter assetWriterWithURL:url fileType:AVFileTypeMPEG4 error:nil];
+        NSError *writerError = nil;
+        self.writer = [AVAssetWriter assetWriterWithURL:url fileType:AVFileTypeMPEG4 error:&writerError];
+        if (writerError != nil)
+        {
+            if (failureBlock)
+            {
+                failureBlock(error);
+            }
+        }
         //使其更适合在网络上播放
         self.writer.shouldOptimizeForNetworkUse = YES;
          //初始化视频写入
@@ -55,6 +63,16 @@
             [self initAudioWriterWithParam:paramModel.outputAudioSetting sampleBuffer:sampleBuffer];
         }
         
+        //配置像素合成参数
+        CMFormatDescriptionRef formatDescription = CMSampleBufferGetFormatDescription(sampleBuffer);
+        CMVideoDimensions dimensions = CMVideoFormatDescriptionGetDimensions(formatDescription);
+        NSDictionary *pixelBufferAttributes = @{
+                                                (id)kCVPixelBufferPixelFormatTypeKey : [NSNumber numberWithInt:kCVPixelFormatType_32BGRA],
+                                                (id)kCVPixelBufferWidthKey : [NSNumber numberWithInt:dimensions.width],
+                                                (id)kCVPixelBufferHeightKey : [NSNumber numberWithInt:dimensions.height]
+                                                };
+        //像素图片合成器
+        self.videoPixelBufferAdaptor = [AVAssetWriterInputPixelBufferAdaptor assetWriterInputPixelBufferAdaptorWithAssetWriterInput:self.videoWriter sourcePixelBufferAttributes:pixelBufferAttributes];
     }
     return self;
 }
@@ -68,17 +86,6 @@
     self.videoWriter.expectsMediaDataInRealTime = YES;
      //将视频输入源加入
     [self.writer addInput:self.videoWriter];
-    
-    //配置像素合成参数
-    CMFormatDescriptionRef formatDescription = CMSampleBufferGetFormatDescription(sampleBuffer);
-    CMVideoDimensions dimensions = CMVideoFormatDescriptionGetDimensions(formatDescription);
-    NSDictionary *pixelBufferAttributes = @{
-                                            (id)kCVPixelBufferPixelFormatTypeKey : [NSNumber numberWithInt:kCVPixelFormatType_32BGRA],
-                                            (id)kCVPixelBufferWidthKey : [NSNumber numberWithInt:dimensions.width],
-                                            (id)kCVPixelBufferHeightKey : [NSNumber numberWithInt:dimensions.height]
-                                            };
-    //像素图片合成器
-    self.videoPixelBufferAdaptor = [AVAssetWriterInputPixelBufferAdaptor assetWriterInputPixelBufferAdaptorWithAssetWriterInput:self.videoWriter sourcePixelBufferAttributes:pixelBufferAttributes];
 }
 
 //初始化音频输入
@@ -110,6 +117,10 @@
 //            completion(NO);
 //        return;
 //    }
+    //写入失败
+    if (self.writer.status == AVAssetWriterStatusFailed) {
+        NSLog(@"writer error %@", _writer.error.localizedDescription);
+    }
     //写入像素
     [self appendVideoPixelBuffer:imageBuffer atTime:time duration:frameDuration completion:completion];
 }
@@ -130,6 +141,7 @@
     //开始写入视频数据
     [self startWriterDataWithstartTime:currentBufferTime];
     CMTime bufferTimestamp = CMTimeSubtract(currentBufferTime, self.startTime);
+
     if([self.videoWriter isReadyForMoreMediaData])
     {
        if([self.videoPixelBufferAdaptor appendPixelBuffer:videoPixelBuffer withPresentationTime:bufferTimestamp])
@@ -184,6 +196,9 @@
     
 }
 
+
+
+
 //调节音频，暂停和恢复后，需要调整时间戳（或视频中会有暂停） http://www.gdcl.co.uk/2013/02/20/iPhone-Pause.html
 - (CMSampleBufferRef)adjustBuffer:(CMSampleBufferRef)sample withTimeOffset:(CMTime)offset andDuration:(CMTime)duration
 {
@@ -214,6 +229,33 @@
     }
     
     return outputPixelBuffer;
+}
+
+#pragma mark - 写入完成
+- (void)finishRecording
+{
+    [self finishRecordingWithCompletionHandler:NULL];
+}
+
+- (void)finishRecordingWithCompletionHandler:(void (^)(void))handler
+{
+    if (self.writer.status == AVAssetWriterStatusCompleted || self.writer.status == AVAssetWriterStatusCancelled || self.writer.status == AVAssetWriterStatusUnknown)
+    {
+        if (handler)
+            handler();
+        return;
+    }
+    
+    if( self.writer.status == AVAssetWriterStatusWriting)
+    {
+        [self.audioWriter markAsFinished];
+        [self.videoWriter markAsFinished];
+    }
+    if ([self.writer respondsToSelector:@selector(finishWritingWithCompletionHandler:)]) {
+        if(handler)
+        [self.writer finishWritingWithCompletionHandler:handler];
+    }
+    
 }
 
 - (dispatch_queue_t)audioWriterQueue

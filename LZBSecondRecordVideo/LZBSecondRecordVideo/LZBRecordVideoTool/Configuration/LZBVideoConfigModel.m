@@ -8,6 +8,9 @@
 
 #import "LZBVideoConfigModel.h"
 
+#define outputVideoSizeWidth 720
+#define outputVideoSizeHeight 1280
+
 @implementation LZBVideoConfigModel
 - (instancetype)init
 {
@@ -15,7 +18,7 @@
   {
       self.codeType = AVVideoCodecH264;
       self.scalingMode = AVVideoScalingModeResizeAspectFill;
-      self.outputVideoSize =CGSizeZero;
+      self.outputVideoSize =CGSizeMake(outputVideoSizeWidth, outputVideoSizeHeight);
   }
     return self;
 }
@@ -36,11 +39,16 @@
     if (options != nil) {
         return options;
     }
-    CGSize outputSize = self.outputVideoSize;
-    if (CGSizeEqualToSize(outputSize, CGSizeZero)) {
-        outputSize = videoSize;
-    }
+    CGSize outputSize = CGSizeZero;
     
+    if(!CGSizeEqualToSize(videoSize, CGSizeZero))
+        outputSize = videoSize;
+    
+    if(!CGSizeEqualToSize(self.outputVideoSize, CGSizeZero))
+        outputSize = self.outputVideoSize;
+    
+   
+  
     NSMutableDictionary *compressionProperties = [[NSMutableDictionary alloc]init];
     //视频尺寸*比率，10.1相当于AVCaptureSessionPresetHigh，数值越大，显示越精细
     [compressionProperties setObject: [NSNumber numberWithInt:outputSize.height*outputSize.width*7.5] forKey:AVVideoAverageBitRateKey];
@@ -48,13 +56,16 @@
     [compressionProperties setObject:@NO forKey:AVVideoAllowFrameReorderingKey];
     [compressionProperties setObject:@30 forKey:AVVideoExpectedSourceFrameRateKey];
     
-    return @{
-             AVVideoCodecKey : self.codeType,
-             AVVideoScalingModeKey : self.scalingMode,
-             AVVideoWidthKey : [NSNumber numberWithInteger:outputSize.width],
-             AVVideoHeightKey : [NSNumber numberWithInteger:outputSize.height],
-             AVVideoCompressionPropertiesKey : compressionProperties
-             };
+    //录制视频的一些配置，分辨率，编码方式等等
+    NSDictionary* settings = [NSDictionary dictionaryWithObjectsAndKeys:
+                              self.codeType, AVVideoCodecKey,
+                              self.scalingMode, AVVideoScalingModeKey,
+                              compressionProperties, AVVideoCompressionPropertiesKey,
+                              [NSNumber numberWithInteger: outputSize.width], AVVideoWidthKey,
+                              [NSNumber numberWithInteger: outputSize.height], AVVideoHeightKey,
+                              
+                              nil];
+    return settings;
     
 }
 @end

@@ -61,7 +61,6 @@
 }
 -(void)viewDidDisappear:(BOOL)animated{
     [super viewDidDisappear:animated];
-    [self.videoTool stopRecord];
     [self.videoTool stopCaputureFunction];
 }
 

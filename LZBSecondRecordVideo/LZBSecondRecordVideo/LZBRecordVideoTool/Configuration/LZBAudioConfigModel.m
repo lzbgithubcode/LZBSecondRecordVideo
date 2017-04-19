@@ -33,10 +33,15 @@
     
     if(sampleBuffer != nil)
     {
-        CMFormatDescriptionRef formatDescription = CMSampleBufferGetFormatDescription(sampleBuffer);
-        const AudioStreamBasicDescription *streamBasicDescription = CMAudioFormatDescriptionGetStreamBasicDescription(formatDescription);
-            sampleRate = streamBasicDescription->mSampleRate;
-            channels = streamBasicDescription->mChannelsPerFrame;
+        CMFormatDescriptionRef ftm = CMSampleBufferGetFormatDescription(sampleBuffer);
+        
+        const AudioStreamBasicDescription *asbd = CMAudioFormatDescriptionGetStreamBasicDescription(ftm);
+        if(asbd != NULL)
+        {
+            sampleRate = asbd->mSampleRate;
+            channels = asbd->mChannelsPerFrame;
+        }
+        
     }
     return @{
              AVFormatIDKey : [NSNumber numberWithInt: self.formatID],

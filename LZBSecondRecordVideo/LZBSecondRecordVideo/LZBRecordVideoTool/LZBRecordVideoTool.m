@@ -8,6 +8,7 @@
 
 #import "LZBRecordVideoTool.h"
 #import "LZBWriterVideoTool.h"
+#import <Photos/Photos.h>
 
 #define kLZBRecordVideoToolRecordSessionQueueKey "LZBRecordVideoToolRecordSessionQueue"
 
@@ -105,6 +106,18 @@
 - (void)stopRecord
 {
     [self stopRecordHandler:nil];
+    NSString* path = self.writerTool.writerPath;
+    NSURL* url = [NSURL fileURLWithPath:path];
+    dispatch_async(self.captureSessionQueue, ^{
+        [self.writerTool finishRecordingWithCompletionHandler:^{
+            [[PHPhotoLibrary sharedPhotoLibrary] performChanges:^{
+                [PHAssetChangeRequest creationRequestForAssetFromVideoAtFileURL:url];
+            } completionHandler:^(BOOL success, NSError * _Nullable error) {
+                NSLog(@"保存成功");
+            }];
+        }];
+    });
+   
 }
 //停止录制
 - (void)stopRecordHandler:(void(^)(UIImage *snapImage))handler
@@ -165,7 +178,11 @@
     
      if(self.writerTool == nil)
      {
-         self.writerTool = [LZBWriterVideoTool writerVideoWithPath:nil configParamModel:self.writerConfigModel sampleBuffer:sampleBuffer];
+         NSString *videoName = [self getUploadFile_type:@"video" fileType:@"mp4"];
+         NSString *videoPath = [[self getVideoCachePath] stringByAppendingPathComponent:videoName];
+         self.writerTool = [LZBWriterVideoTool writerVideoWithPath:videoPath configParamModel:self.writerConfigModel sampleBuffer:sampleBuffer failCallBack:^(NSError *error) {
+             NSLog(@"======初始化写入失败error:%@",error);
+         }];
      }
 
     //如果是视频
@@ -209,6 +226,32 @@
         return connection.videoMinFrameDuration;
 #pragma clang diagnostic pop
 }
+
+
+#pragma mark - 视频地址
+//获得视频存放地址
+- (NSString *)getVideoCachePath {
+    NSString *videoCache = [NSTemporaryDirectory() stringByAppendingPathComponent:@"videos"] ;
+    BOOL isDir = NO;
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    BOOL existed = [fileManager fileExistsAtPath:videoCache isDirectory:&isDir];
+    if ( !(isDir == YES && existed == YES) ) {
+        [fileManager createDirectoryAtPath:videoCache withIntermediateDirectories:YES attributes:nil error:nil];
+    };
+    return videoCache;
+}
+
+- (NSString *)getUploadFile_type:(NSString *)type fileType:(NSString *)fileType {
+    NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
+    NSDateFormatter * formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateFormat:@"HHmmss"];
+    NSDate * NowDate = [NSDate dateWithTimeIntervalSince1970:now];
+    ;
+    NSString * timeStr = [formatter stringFromDate:NowDate];
+    NSString *fileName = [NSString stringWithFormat:@"%@_%@.%@",type,timeStr,fileType];
+    return fileName;
+}
+
 
 #pragma mark- lazy
 //捕获到的视频呈现的layer

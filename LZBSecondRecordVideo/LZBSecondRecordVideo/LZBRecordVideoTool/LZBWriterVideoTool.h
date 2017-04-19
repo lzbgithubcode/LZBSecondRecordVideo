@@ -34,7 +34,7 @@
  @param paramModel 参数配置模型
  @return LZBWriterVideoTool
  */
-+ (LZBWriterVideoTool *)writerVideoWithPath:(NSString *)path configParamModel:(LZBWriterVideoConfigModel *)paramModel  sampleBuffer:(CMSampleBufferRef)sampleBuffer;
++ (LZBWriterVideoTool *)writerVideoWithPath:(NSString *)path configParamModel:(LZBWriterVideoConfigModel *)paramModel  sampleBuffer:(CMSampleBufferRef)sampleBuffer failCallBack:(void(^)(NSError *error))failBlock;
 
 
 /**
@@ -43,7 +43,7 @@
  @param paramModel 参数配置模型
  @return LZBWriterVideoTool
  */
-- (instancetype)initWithPath:(NSString *)path configParamModel:(LZBWriterVideoConfigModel *)paramModel sampleBuffer:(CMSampleBufferRef)sampleBuffer;
+- (instancetype)initWithPath:(NSString *)path configParamModel:(LZBWriterVideoConfigModel *)paramModel sampleBuffer:(CMSampleBufferRef)sampleBuffer failCallBack:(void(^)(NSError *error))failBlock;
 
 
 /**
@@ -57,5 +57,10 @@
  @param sampleBuffer 写入的数据
  */
 - (void)writerAudioDataSampleBuffer:(CMSampleBufferRef)sampleBuffer completion:(void (^)(BOOL suceess))completion;
+
+
+- (void)finishRecording;
+
+- (void)finishRecordingWithCompletionHandler:(void (^)(void))handler;
 
 @end
